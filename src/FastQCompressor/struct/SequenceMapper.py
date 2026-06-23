@@ -1,10 +1,19 @@
 import math
+import ast
+
+SEPERATOR = chr(182)
+
+
 
 class SequencePacker:
-    def __init__(self, sequence, length, alphabet):
+    def __init__(self, sequence: bytes, length : int, alphabet : list):
         self.sequence = sequence
         self.length = length
         self.alphabet = alphabet
+
+    def __str__(self) -> str:
+        return str(self.length) + SEPERATOR + self.sequence.decode() + SEPERATOR + str(self.alphabet)
+
 
 
 
@@ -31,7 +40,7 @@ def encode_sequence(sequence):
     return SequencePacker(encoded, len(sequence), alphabet)
 
 
-def decode_sequence(sequencepacker : SequencePacker):
+def _decode_packed_sequence(sequencepacker : SequencePacker):
     n = len(sequencepacker.alphabet)
     bits_per_char = max(1, math.ceil(math.log2(n)))
     bitstream = int.from_bytes(sequencepacker.sequence, byteorder="big")
@@ -49,14 +58,26 @@ def decode_sequence(sequencepacker : SequencePacker):
     return "".join(chars)
 
 
-## Test
-text = "ABCDABCDABCD"
+def decode_sequence(sequence : str) -> str:
+    datalist = sequence.split(SEPERATOR)
+    sequencepacker = SequencePacker(datalist[1].encode(), int(datalist[0]), ast.literal_eval(datalist[2]))
+    return _decode_packed_sequence(sequencepacker)
 
-sequencepacker = encode_sequence(text)
+def main():
+    ## Test
+    text = "ABCDABCDABCD"
 
-print(sequencepacker.sequence)
-print(len(sequencepacker.sequence))
+    sequencepacker = encode_sequence(text)
+    print(sequencepacker.__str__())
 
-decoded = decode_sequence(sequencepacker)
-print(decoded)
-print(len(decoded))
+    print(sequencepacker.sequence)
+    print(len(sequencepacker.sequence))
+    print(sequencepacker.alphabet)
+
+    decoded = decode_sequence(sequencepacker.__str__())
+    print(decoded)
+    print(len(decoded))
+    print()
+
+if __name__ == "__main__":
+    main()
