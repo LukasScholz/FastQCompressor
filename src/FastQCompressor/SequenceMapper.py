@@ -12,7 +12,7 @@ class SequencePacker:
         self.alphabet = alphabet
 
     def __str__(self) -> str:
-        return str(self.length) + SEPERATOR + self.sequence.decode() + SEPERATOR + str(self.alphabet)
+        return str(self.length) + SEPERATOR + self.sequence.decode("iso-8859-1") + SEPERATOR + str(self.alphabet)
 
 
 
@@ -40,41 +40,41 @@ def encode_sequence(sequence):
     return SequencePacker(encoded, len(sequence), alphabet)
 
 
-def _decode_packed_sequence(sequencepacker : SequencePacker):
-    n = len(sequencepacker.alphabet)
+def _decode_packed_sequence(sequence_packer : SequencePacker):
+    n = len(sequence_packer.alphabet)
     bits_per_char = max(1, math.ceil(math.log2(n)))
-    bitstream = int.from_bytes(sequencepacker.sequence, byteorder="big")
-    total_bits = len(sequencepacker.sequence) * 8
-    padding = total_bits - sequencepacker.length * bits_per_char
+    bitstream = int.from_bytes(sequence_packer.sequence, byteorder="big")
+    total_bits = len(sequence_packer.sequence) * 8
+    padding = total_bits - sequence_packer.length * bits_per_char
     bitstream >>= padding
     mask = (1 << bits_per_char) - 1
 
     chars = []
-    for i in range(sequencepacker.length):
-        shift = (sequencepacker.length - 1 - i) * bits_per_char
+    for i in range(sequence_packer.length):
+        shift = (sequence_packer.length - 1 - i) * bits_per_char
         code = (bitstream >> shift) & mask
-        chars.append(sequencepacker.alphabet[code])
+        chars.append(sequence_packer.alphabet[code])
 
     return "".join(chars)
 
 
 def decode_sequence(sequence : str) -> str:
     datalist = sequence.split(SEPERATOR)
-    sequencepacker = SequencePacker(datalist[1].encode(), int(datalist[0]), ast.literal_eval(datalist[2]))
-    return _decode_packed_sequence(sequencepacker)
+    sequence_packer = SequencePacker(datalist[1].encode("iso-8859-1"), int(datalist[0]), ast.literal_eval(datalist[2]))
+    return _decode_packed_sequence(sequence_packer)
 
 def main():
     ## Test
     text = "ABCDABCDABCD"
 
-    sequencepacker = encode_sequence(text)
-    print(sequencepacker.__str__())
+    sequence_packer = encode_sequence(text)
+    print(sequence_packer.__str__())
 
-    print(sequencepacker.sequence)
-    print(len(sequencepacker.sequence))
-    print(sequencepacker.alphabet)
+    print(sequence_packer.sequence)
+    print(len(sequence_packer.sequence))
+    print(sequence_packer.alphabet)
 
-    decoded = decode_sequence(sequencepacker.__str__())
+    decoded = decode_sequence(sequence_packer.__str__())
     print(decoded)
     print(len(decoded))
     print()
