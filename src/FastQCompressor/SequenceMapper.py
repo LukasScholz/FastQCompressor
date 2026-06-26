@@ -1,5 +1,6 @@
 import math
 import ast
+import pickle
 
 SEPERATOR = chr(182)
 
@@ -11,8 +12,8 @@ class SequencePacker:
         self.length = length
         self.alphabet = alphabet
 
-    def __str__(self) -> str:
-        return str(self.length) + SEPERATOR + self.sequence.decode("iso-8859-1") + SEPERATOR + str(self.alphabet)
+    def save(self) -> bytes:
+        return pickle.dumps(self)
 
 
 
@@ -58,23 +59,22 @@ def _decode_packed_sequence(sequence_packer : SequencePacker):
     return "".join(chars)
 
 
-def decode_sequence(sequence : str) -> str:
-    datalist = sequence.split(SEPERATOR)
-    sequence_packer = SequencePacker(datalist[1].encode("iso-8859-1"), int(datalist[0]), ast.literal_eval(datalist[2]))
-    return _decode_packed_sequence(sequence_packer)
+def decode_sequence(sequence : bytes) -> str:
+    datalist = pickle.loads(sequence)
+    return _decode_packed_sequence(datalist)
 
 def main():
     ## Test
     text = "ABCDABCDABCD"
 
     sequence_packer = encode_sequence(text)
-    print(sequence_packer.__str__())
+    print(sequence_packer.save())
 
     print(sequence_packer.sequence)
     print(len(sequence_packer.sequence))
     print(sequence_packer.alphabet)
 
-    decoded = decode_sequence(sequence_packer.__str__())
+    decoded = decode_sequence(sequence_packer.save())
     print(decoded)
     print(len(decoded))
     print()

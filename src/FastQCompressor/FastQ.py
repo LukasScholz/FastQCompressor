@@ -1,5 +1,5 @@
-import ast
 import os
+import pickle
 import FastQCompressor.SequenceMapper as SequenceMapper
 
 FILEEXTENSION = ".compressed"
@@ -8,32 +8,30 @@ def compress(file, new_filename=None):
     fastq = _FastQ()
     if new_filename is None:
         new_filename = file+FILEEXTENSION # Default name
-    fastq.compress_file(file)
-    fastq.print_entries(new_filename)
+    fastq.compress_file(file, new_filename)
 
 def decompress(file, new_filename=None):
     fastq = _FastQ()
     if new_filename is None:
         new_filename = os.path.splitext(file)[0]
-    result = fastq.decompress_file(file)
-    with open(new_filename, "w") as file:
-        file.write(result)
+    fastq.decompress_file(file, new_filename)
 
 class _FastQ:
     def __init__(self):
         self.entries = []
 
-    def print_entries(self, new_filename):
-        with open(new_filename, "w") as file:
-            for entry in self.entries:
-                for line in entry:
-                    file.write(line+"\n")
+    def save(self, new_filename):
+        with open(new_filename, "wb") as file:
+            pickle.dump(self.entries, file)
 
-    def compress_file(self, file):
+    def load(self, file):
+        with open(file, "rb") as f:
+            self.entries = pickle.load(f)
+
+    def compress_file(self, file, new_filename):
         with open(file, "r") as file:
             remaining_lines = 0
             for line in file:
-                line = line.replace("\n","")
                 # Sequence identifier
                 if line.startswith("@"):
                     remaining_lines = 4
@@ -51,7 +49,7 @@ class _FastQ:
 
                     case 3:
                         # line is raw sequence
-                        self.entries[-1].append(SequenceMapper.encode_sequence(line).__str__())
+                        self.entries[-1].append(SequenceMapper.encode_sequence(line).save())
                         remaining_lines -= 1
 
                     case 2:
@@ -61,35 +59,23 @@ class _FastQ:
 
                     case 1:
                         # line is quality sequence
-                        self.entries[-1].append(SequenceMapper.encode_sequence(line).__str__())
+                        self.entries[-1].append(SequenceMapper.encode_sequence(line).save())
                         remaining_lines -= 1
 
                     case _:
                         # something went horribly wrong
                         raise IOError("Malformatted FastQ File")
+        self.save(new_filename)
 
-    def decompress_file(self, file):
-        with open(file, "r") as file:
-            remaining_lines = 0
-            result = ""
-            for line in file:
-                match remaining_lines:
-                    case 0:
-                        result += line # Sequence Identifier
-                        remaining_lines += 1
-                    case 1:
-                        result += SequenceMapper.decode_sequence(line).__str__() # Raw Sequence
-                        remaining_lines += 1
-                    case 2:
-                        result += line # Descriptor Sequence
-                        remaining_lines += 1
-                    case 3:
-                        result += SequenceMapper.decode_sequence(line).__str__() # Quality Sequence
-                        remaining_lines = 0
-                    case _:
-                        # something went horribly wrong
-                        raise IOError("Malformatted FastQ File")
-        return result
+    def decompress_file(self, file, new_filename):
+        self.load(file)
+        with open(new_filename, "w") as file:
+            for entry in self.entries:
+                file.write(entry[0]) # Sequence Identifier
+                file.write(SequenceMapper.decode_sequence(entry[1])) # Raw Sequence
+                file.write(entry[2]) # Descriptor Sequence
+                file.write(SequenceMapper.decode_sequence(entry[3])) # Quality sequence
+
 
 
 
@@ -98,9 +84,8 @@ def main():
     file = "test/data/HI.4019.002.index_7.ANN0831_R1.fastq"
     compress(file, "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.compressed")
     # Decompress
-    #file = "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.compressed"
-    #decompress(file, "test/data/temp.fastq")
-    # Todo: Replace encoded newline character with smthg else
+    file = "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.compressed"
+    decompress(file, "test/data/temp.fastq")
 
 if __name__ == "__main__":
     main()
