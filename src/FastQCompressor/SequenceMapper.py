@@ -62,22 +62,3 @@ def _decode_packed_sequence(sequence_packer : SequencePacker):
 def decode_sequence(sequence : bytes) -> str:
     datalist = pickle.loads(sequence)
     return _decode_packed_sequence(datalist)
-
-def main():
-    ## Test
-    text = "ABCDABCDABCD"
-
-    sequence_packer = encode_sequence(text)
-    print(sequence_packer.save())
-
-    print(sequence_packer.sequence)
-    print(len(sequence_packer.sequence))
-    print(sequence_packer.alphabet)
-
-    decoded = decode_sequence(sequence_packer.save())
-    print(decoded)
-    print(len(decoded))
-    print()
-
-if __name__ == "__main__":
-    main()
