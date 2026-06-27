@@ -75,17 +75,3 @@ class _FastQ:
                 file.write(SequenceMapper.decode_sequence(entry[1])) # Raw Sequence
                 file.write(entry[2]) # Descriptor Sequence
                 file.write(SequenceMapper.decode_sequence(entry[3])) # Quality sequence
-
-
-
-
-def main():
-    # Test
-    file = "test/data/HI.4019.002.index_7.ANN0831_R1.fastq"
-    compress(file, "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.compressed")
-    # Decompress
-    file = "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.compressed"
-    decompress(file, "test/data/temp.fastq")
-
-if __name__ == "__main__":
-    main()
