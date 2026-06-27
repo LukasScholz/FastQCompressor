@@ -2,8 +2,6 @@ import unittest
 
 import FastQCompressor.SequenceMapper as SequenceMapper
 
-Files = ["test/data/HI.4019.002.index_7.ANN0831_R1.fastq"]
-
 class TestSubroutines(unittest.TestCase):
 
     def test_regular_sequence_decoding(self):
