@@ -1,5 +1,6 @@
 import unittest
 
+
 import FastQCompressor.SequenceMapper as SequenceMapper
 
 class TestSubroutines(unittest.TestCase):
