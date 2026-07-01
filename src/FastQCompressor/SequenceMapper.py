@@ -1,5 +1,4 @@
 import math
-import ast
 import pickle
 
 SEPERATOR = chr(182)
