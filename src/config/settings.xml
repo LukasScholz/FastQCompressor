@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+  <FastQ>
+    <fileextension>.compressed</fileextension>
+  </FastQ>
+  <SequenceMapper>
+      <AsciiCodeseperator>182</AsciiCodeseperator>
+  </SequenceMapper>
+</settings>

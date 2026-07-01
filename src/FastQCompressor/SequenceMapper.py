@@ -1,8 +1,9 @@
 import math
 import pickle
+import FastQCompressor.Config as Config
 
-SEPERATOR = chr(182)
-
+config = Config.Config()
+SEPERATOR = chr(int(config.get(["SequenceMapper", "AsciiCodeseperator"])))
 
 
 class SequencePacker:
