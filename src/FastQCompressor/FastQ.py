@@ -3,8 +3,11 @@ import pickle
 import FastQCompressor.SequenceMapper as SequenceMapper
 import FastQCompressor.Config as Config
 
-config = Config.Config()
-FILEEXTENSION = config.get(["FastQ", "fileextension"])
+
+CONFIG_PATH = "src/config/settings.xml"
+config = Config.Config(CONFIG_PATH)
+
+FILEEXTENSION = config.print(["FastQ", "fileextension"])
 
 def compress(file, new_filename=None):
     fastq = _FastQ()

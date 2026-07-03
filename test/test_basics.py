@@ -1,14 +1,19 @@
 from pathlib import Path
 import unittest
+from FastQCompressor.Config import Config
+import xml.etree.ElementTree as Et
 
-Files = ["test/data/HI.4019.002.index_7.ANN0831_R1.fastq"]
+FILE_PATH = "src/config/testdata.xml"
+file_config = Config(FILE_PATH)
 
 class TestSubroutines(unittest.TestCase):
 
     def test_files(self):
+        folder = file_config.print(["datafolder", "foldername"])
+        files = file_config.get_all_children(["datafolder", "files"])
         all_found = True
-        for file in Files:
-            if not Path(file).exists():
+        for file in files:
+            if not Path(folder+"/"+file.find("filename").text).exists():
                 all_found = False
         self.assertTrue(all_found)
 
