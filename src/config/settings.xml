@@ -4,6 +4,6 @@
     <fileextension>.compressed</fileextension>
   </FastQ>
   <SequenceMapper>
-      <AsciiCodeseperator>182</AsciiCodeseperator>
+    <AsciiCodeseperator>182</AsciiCodeseperator>
   </SequenceMapper>
 </settings>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <datafolder>
+        <foldername>test/data</foldername>
+        <files>
+            <file>
+                <filename>HI.4019.002.index_7.ANN0831_R1.fastq</filename>
+                <filetype>fastq</filetype>
+                <compressed>False</compressed>
+            </file>
+            <file>
+                <filename>HI.4019.002.index_7.ANN0831_R1.fastq.compressed</filename>
+                <filetype>fastq</filetype>
+                <compressed>True</compressed>
+            </file>
+            <file>
+                <filename>HI.4019.002.index_7.ANN0831_R1.fastq.decompressed</filename>
+                <filetype>fastq</filetype>
+                <compressed>False</compressed>
+            </file>
+        </files>
+    </datafolder>
+</data>
