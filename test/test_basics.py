@@ -1,7 +1,6 @@
 from pathlib import Path
 import unittest
 from FastQCompressor.Config import Config
-import xml.etree.ElementTree as Et
 
 FILE_PATH = "src/config/testdata.xml"
 file_config = Config(FILE_PATH)
@@ -16,6 +15,11 @@ class TestSubroutines(unittest.TestCase):
             if not Path(folder+"/"+file.find("filename").text).exists():
                 all_found = False
         self.assertTrue(all_found)
+
+    def test_file_not_found(self):
+        with self.assertRaises(Config.ConfigException):
+            Config("this/path/does/not/exist")
+
 
 
 if __name__ == '__main__':
