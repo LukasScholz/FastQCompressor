@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as Et
-from idlelib.config import InvalidConfigType
 
 
 class Config:
@@ -8,18 +7,16 @@ class Config:
             tree = Et.parse(config_path)
             self._root = tree.getroot()
         except FileNotFoundError:
-            print("XML file not found!")
+            raise self.ConfigException("FileNotFound", "Config file not found!", 404)
         except Et.ParseError:
-            print("Invalid XML file!")
-        # Todo: implement actual Exception handler
+            raise self.ConfigException("MalformedFile", "Invalid XML file!", 406)
 
     def print(self, attribute_path):
             attribute = self._root
             for entry in attribute_path:
                 attribute = attribute.find(entry)
                 if attribute is None:
-                    raise InvalidConfigType("Config Path not found!")
-                    # Todo: implement actual Exception handler
+                    raise self.ConfigException("ValueNotFound", "Config value not found!", 404)
             return attribute.text
 
     def get_all_children(self, attribute_path):
@@ -27,6 +24,16 @@ class Config:
         for entry in attribute_path:
             attribute = attribute.find(entry)
             if attribute is None:
-                raise InvalidConfigType("Config Path not found!")
-                # Todo: implement actual Exception handler
+                raise self.ConfigException("ValueNotFound", "Config value not found!", 404)
         return attribute.findall("./*")
+
+    class ConfigException(Exception):
+        def __init__(self, exception_type : str, message : str, error_code : int):
+            super().__init__(message)
+            self.type = exception_type
+            self.message = message
+            self.error_code = error_code
+
+        def __str__(self):
+            return (f"{self.type} (Error Code: {self.error_code}) \n"
+                    f"{self.message}")
