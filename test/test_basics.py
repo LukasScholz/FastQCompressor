@@ -5,6 +5,7 @@ from FastQCompressor.Config import Config
 FILE_PATH = "src/config/testdata.xml"
 file_config = Config(FILE_PATH)
 
+
 class TestSubroutines(unittest.TestCase):
 
     def test_files(self):
@@ -20,6 +21,12 @@ class TestSubroutines(unittest.TestCase):
         with self.assertRaises(Config.ConfigException):
             Config("this/path/does/not/exist")
 
+    def test_corrupted(self):
+        folder = file_config.print(["datafolder", "foldername"])
+        files = file_config.get_all_children(["datafolder", "files"])
+        with self.assertRaises(Config.ConfigException):
+            incorrect_file = folder + "/" + files[0].find("filename").text
+            Config(incorrect_file)
 
 
 if __name__ == '__main__':
