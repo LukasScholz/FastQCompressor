@@ -9,17 +9,20 @@ config = Config.Config(CONFIG_PATH)
 
 FILEEXTENSION = config.print(["FastQ", "fileextension"])
 
+
 def compress(file, new_filename=None):
     fastq = _FastQ()
     if new_filename is None:
-        new_filename = file+FILEEXTENSION # Default name
+        new_filename = file+FILEEXTENSION  # Default name
     fastq.compress_file(file, new_filename)
+
 
 def decompress(file, new_filename=None):
     fastq = _FastQ()
     if new_filename is None:
         new_filename = os.path.splitext(file)[0]
     fastq.decompress_file(file, new_filename)
+
 
 class _FastQ:
     def __init__(self):
@@ -76,7 +79,7 @@ class _FastQ:
         self.load(file)
         with open(new_filename, "w") as file:
             for entry in self.entries:
-                file.write(entry[0]) # Sequence Identifier
-                file.write(SequenceMapper.decode_sequence(entry[1])) # Raw Sequence
-                file.write(entry[2]) # Descriptor Sequence
-                file.write(SequenceMapper.decode_sequence(entry[3])) # Quality sequence
+                file.write(entry[0])  # Sequence Identifier
+                file.write(SequenceMapper.decode_sequence(entry[1]))  # Raw Sequence
+                file.write(entry[2])  # Descriptor Sequence
+                file.write(SequenceMapper.decode_sequence(entry[3]))  # Quality sequence

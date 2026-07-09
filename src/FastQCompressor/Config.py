@@ -12,12 +12,12 @@ class Config:
             raise self.ConfigException("MalformedFile", "Invalid XML file!", 406)
 
     def print(self, attribute_path):
-            attribute = self._root
-            for entry in attribute_path:
-                attribute = attribute.find(entry)
-                if attribute is None:
-                    raise self.ConfigException("ValueNotFound", "Config value not found!", 404)
-            return attribute.text
+        attribute = self._root
+        for entry in attribute_path:
+            attribute = attribute.find(entry)
+            if attribute is None:
+                raise self.ConfigException("ValueNotFound", "Config value not found!", 404)
+        return attribute.text
 
     def get_all_children(self, attribute_path):
         attribute = self._root
@@ -28,7 +28,7 @@ class Config:
         return attribute.findall("./*")
 
     class ConfigException(Exception):
-        def __init__(self, exception_type : str, message : str, error_code : int):
+        def __init__(self, exception_type: str, message: str, error_code: int):
             super().__init__(message)
             self.type = exception_type
             self.message = message

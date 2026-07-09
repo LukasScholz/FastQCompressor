@@ -1,7 +1,6 @@
 import unittest
-
-
 import FastQCompressor.SequenceMapper as SequenceMapper
+
 
 class TestSubroutines(unittest.TestCase):
 
@@ -27,6 +26,7 @@ class TestSubroutines(unittest.TestCase):
         text = "TACGCGGACTGCATGCGTGGTACGTCAGTCAGT"
         sequence_packer = SequenceMapper.encode_sequence(text)
         self.assertTrue(len(sequence_packer.sequence) < len(text))
+
 
 if __name__ == '__main__':
     unittest.main()

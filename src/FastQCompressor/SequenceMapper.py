@@ -10,16 +10,13 @@ SEPERATOR = chr(int(config.print(["SequenceMapper", "AsciiCodeseperator"])))
 
 
 class SequencePacker:
-    def __init__(self, sequence: bytes, length : int, alphabet : list):
+    def __init__(self, sequence: bytes, length: int, alphabet: list):
         self.sequence = sequence
         self.length = length
         self.alphabet = alphabet
 
     def save(self) -> bytes:
         return pickle.dumps(self)
-
-
-
 
 
 def encode_sequence(sequence):
@@ -44,7 +41,7 @@ def encode_sequence(sequence):
     return SequencePacker(encoded, len(sequence), alphabet)
 
 
-def _decode_packed_sequence(sequence_packer : SequencePacker):
+def _decode_packed_sequence(sequence_packer: SequencePacker):
     n = len(sequence_packer.alphabet)
     bits_per_char = max(1, math.ceil(math.log2(n)))
     bitstream = int.from_bytes(sequence_packer.sequence, byteorder="big")
@@ -62,6 +59,6 @@ def _decode_packed_sequence(sequence_packer : SequencePacker):
     return "".join(chars)
 
 
-def decode_sequence(sequence : bytes) -> str:
+def decode_sequence(sequence: bytes) -> str:
     datalist = pickle.loads(sequence)
     return _decode_packed_sequence(datalist)
