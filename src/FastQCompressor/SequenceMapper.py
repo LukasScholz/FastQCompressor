@@ -3,45 +3,50 @@ import pickle
 import FastQCompressor.Config as Config
 
 
-CONFIG_PATH = "src/config/settings.xml"
-config = Config.Config(CONFIG_PATH)
-
-SEPERATOR = chr(int(config.print(["SequenceMapper", "AsciiCodeseperator"])))
-
-
-class SequencePacker:
+class _SequencePacker:
     def __init__(self, sequence: bytes, length: int, alphabet: list):
         self.sequence = sequence
         self.length = length
         self.alphabet = alphabet
 
+
     def save(self) -> bytes:
         return pickle.dumps(self)
 
-
-def encode_sequence(sequence):
-    alphabet = sorted(set(sequence))
-    n = len(alphabet)
-    bits_per_char = max(1, math.ceil(math.log2(n)))
-    encode_map = {c: i for i, c in enumerate(alphabet)}
-
-    bitstream = 0
-    total_bits = 0
-
-    for c in sequence:
-        bitstream = (bitstream << bits_per_char) | encode_map[c]
-        total_bits += bits_per_char
-
-    padding = (8 - total_bits % 8) % 8
-    bitstream <<= padding
-    total_bits += padding
-
-    encoded = bitstream.to_bytes(total_bits // 8, byteorder="big")
-
-    return SequencePacker(encoded, len(sequence), alphabet)
+class SequenceCoder:
+    def __init__(self, config_path):
+        self.config = Config.Config(config_path)
+        self.seperator = chr(int(self.config.print(["SequenceMapper", "AsciiCodeseperator"])))
 
 
-def _decode_packed_sequence(sequence_packer: SequencePacker):
+    def encode_sequence(self, sequence):
+        alphabet = sorted(set(sequence))
+        n = len(alphabet)
+        bits_per_char = max(1, math.ceil(math.log2(n)))
+        encode_map = {c: i for i, c in enumerate(alphabet)}
+
+        bitstream = 0
+        total_bits = 0
+
+        for c in sequence:
+            bitstream = (bitstream << bits_per_char) | encode_map[c]
+            total_bits += bits_per_char
+
+        padding = (8 - total_bits % 8) % 8
+        bitstream <<= padding
+        total_bits += padding
+
+        encoded = bitstream.to_bytes(total_bits // 8, byteorder="big")
+
+        return _SequencePacker(encoded, len(sequence), alphabet)
+
+
+    def decode_sequence(self, sequence: bytes) -> str:
+        datalist = pickle.loads(sequence)
+        return _decode_packed_sequence(datalist)
+
+
+def _decode_packed_sequence(sequence_packer: _SequencePacker):
     n = len(sequence_packer.alphabet)
     bits_per_char = max(1, math.ceil(math.log2(n)))
     bitstream = int.from_bytes(sequence_packer.sequence, byteorder="big")
@@ -55,10 +60,4 @@ def _decode_packed_sequence(sequence_packer: SequencePacker):
         shift = (sequence_packer.length - 1 - i) * bits_per_char
         code = (bitstream >> shift) & mask
         chars.append(sequence_packer.alphabet[code])
-
     return "".join(chars)
-
-
-def decode_sequence(sequence: bytes) -> str:
-    datalist = pickle.loads(sequence)
-    return _decode_packed_sequence(datalist)

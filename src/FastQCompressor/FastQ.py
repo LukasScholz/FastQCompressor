@@ -4,24 +4,24 @@ import FastQCompressor.SequenceMapper as SequenceMapper
 import FastQCompressor.Config as Config
 
 
-CONFIG_PATH = "src/config/settings.xml"
-config = Config.Config(CONFIG_PATH)
 
-FILEEXTENSION = config.print(["FastQ", "fileextension"])
+class FileCompressor:
+    def __init__(self, config_path):
+        self.config = Config.Config(config_path)
+        self.fileextension = self.config.print(["FastQ", "fileextension"])
+
+    def compress(self, file, new_filename=None):
+        fastq = _FastQ()
+        if new_filename is None:
+            new_filename = file+self.fileextension  # Default name
+        fastq.compress_file(file, new_filename)
 
 
-def compress(file, new_filename=None):
-    fastq = _FastQ()
-    if new_filename is None:
-        new_filename = file+FILEEXTENSION  # Default name
-    fastq.compress_file(file, new_filename)
-
-
-def decompress(file, new_filename=None):
-    fastq = _FastQ()
-    if new_filename is None:
-        new_filename = os.path.splitext(file)[0]
-    fastq.decompress_file(file, new_filename)
+    def decompress(self, file, new_filename=None):
+        fastq = _FastQ()
+        if new_filename is None:
+            new_filename = os.path.splitext(file)[0]
+        fastq.decompress_file(file, new_filename)
 
 
 class _FastQ:
