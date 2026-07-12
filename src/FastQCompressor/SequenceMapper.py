@@ -9,15 +9,14 @@ class _SequencePacker:
         self.length = length
         self.alphabet = alphabet
 
-
     def save(self) -> bytes:
         return pickle.dumps(self)
+
 
 class SequenceCoder:
     def __init__(self, config_path):
         self.config = Config.Config(config_path)
         self.seperator = chr(int(self.config.print(["SequenceMapper", "AsciiCodeseperator"])))
-
 
     def encode_sequence(self, sequence):
         alphabet = sorted(set(sequence))
@@ -39,7 +38,6 @@ class SequenceCoder:
         encoded = bitstream.to_bytes(total_bits // 8, byteorder="big")
 
         return _SequencePacker(encoded, len(sequence), alphabet)
-
 
     def decode_sequence(self, sequence: bytes) -> str:
         datalist = pickle.loads(sequence)

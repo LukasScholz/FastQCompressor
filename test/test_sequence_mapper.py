@@ -3,6 +3,7 @@ import FastQCompressor.SequenceMapper as SequenceMapper
 
 CONFIG_PATH = "src/config/settings.xml"
 
+
 class TestSubroutines(unittest.TestCase):
 
     def test_regular_sequence_decoding(self):

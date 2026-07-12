@@ -4,7 +4,6 @@ import FastQCompressor.SequenceMapper as SequenceMapper
 import FastQCompressor.Config as Config
 
 
-
 class FileCompressor:
     def __init__(self, config_path):
         self.config_path = config_path
@@ -16,7 +15,6 @@ class FileCompressor:
         if new_filename is None:
             new_filename = file+self.fileextension  # Default name
         fastq.compress_file(file, new_filename)
-
 
     def decompress(self, file, new_filename=None):
         fastq = _FastQ(self.config_path)

@@ -7,6 +7,7 @@ Files = ["test/data/HI.4019.002.index_7.ANN0831_R1.fastq", "test/data/HI.4019.00
          "test/data/HI.4019.002.index_7.ANN0831_R1.fastq.decompressed"]
 CONFIG_PATH = "src/config/settings.xml"
 
+
 class TestSubroutines(unittest.TestCase):
 
     def test_regular_file_decoding(self):
