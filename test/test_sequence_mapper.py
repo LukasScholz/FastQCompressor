@@ -5,7 +5,6 @@ CONFIG_PATH = "src/config/settings.xml"
 
 
 class TestSubroutines(unittest.TestCase):
-
     def test_regular_sequence_decoding(self):
         sequencecoder = SequenceMapper.SequenceCoder(CONFIG_PATH)
         text = "TACGCGGACTGCATGCGTGGTACGTCAGTCAGT"
@@ -34,5 +33,5 @@ class TestSubroutines(unittest.TestCase):
         self.assertTrue(len(sequence_packer.sequence) < len(text))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

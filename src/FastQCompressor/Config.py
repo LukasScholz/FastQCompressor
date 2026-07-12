@@ -35,5 +35,4 @@ class Config:
             self.error_code = error_code
 
         def __str__(self):
-            return (f"{self.type} (Error Code: {self.error_code}) \n"
-                    f"{self.message}")
+            return f"{self.type} (Error Code: {self.error_code}) \n{self.message}"

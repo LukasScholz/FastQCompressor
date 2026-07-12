@@ -13,7 +13,7 @@ class FileCompressor:
     def compress(self, file, new_filename=None):
         fastq = _FastQ(self.config_path)
         if new_filename is None:
-            new_filename = file+self.fileextension  # Default name
+            new_filename = file + self.fileextension  # Default name
         fastq.compress_file(file, new_filename)
 
     def decompress(self, file, new_filename=None):
@@ -46,7 +46,6 @@ class _FastQ:
                     remaining_lines = 4
 
                 match remaining_lines:
-
                     case 0:
                         # do not store info outside FastQ sequences
                         continue
