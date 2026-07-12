@@ -26,7 +26,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install uv
-        uv pip install -r requirements.txt
+        uv pip install -r requirements.txt --system
     - name: Lint with ruff
       run: |
         uv add --dev ruff   
