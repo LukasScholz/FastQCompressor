@@ -3,6 +3,9 @@
   <FastQ>
     <fileextension>.compressed</fileextension>
   </FastQ>
+  <FolderCompressor>
+    <folderextension>.compressed.tar.gz</folderextension>
+  </FolderCompressor>
   <SequenceMapper>
     <AsciiCodeseperator>182</AsciiCodeseperator>
   </SequenceMapper>
