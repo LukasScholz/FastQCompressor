@@ -2,7 +2,7 @@
 Basic Compression Software for FastQ and similar Files
 
 ### Requirements
-- Python (version >= 3.11)
+- Python (version >= 3.12)
 
 
 ### Installation
