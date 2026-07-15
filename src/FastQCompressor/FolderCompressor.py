@@ -11,15 +11,24 @@ class FolderCompressor:
         self.config_path = config_path
         self.config = Config.Config(config_path)
 
-    def compress(self, folder_path: str):
+    def compress(self, folder_path: str, keep_compressed_files=True):
         folder_extension = self.config.print(["FolderCompressor", "folderextension"])
+        file_extension = self.config.print(["FastQ", "fileextension"])
         file_compressor = FastQ.FileCompressor(self.config_path)
         folder = Path(folder_path)
         for root, _, files in folder.walk():
             for file in files:
                 filepath = f"{root}/{file}"
                 file_compressor.compress(filepath)
-        _make_tarfile(folder.name + folder_extension, folder)
+
+        _make_tarfile(folder_path + folder_extension, folder)
+
+        if not keep_compressed_files:
+            for root, _, files in folder.walk():
+                for file in files:
+                    if file.endswith(file_extension):
+                        filepath = f"{root}/{file}"
+                        os.remove(filepath)
 
 
 def _make_tarfile(output_filename, source_dir):
