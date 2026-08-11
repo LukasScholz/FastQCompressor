@@ -6,17 +6,34 @@ import FastQCompressor.Config as Config
 
 class FileCompressor:
     def __init__(self, config_path):
+        """
+        :param config_path: Path to the config File
+
+        File Compression class for compressing singular FastQ like files
+        """
         self.config_path = config_path
         self.config = Config.Config(config_path)
         self.fileextension = self.config.print(["FastQ", "fileextension"])
 
     def compress(self, file, new_filename=None):
+        """
+        :param file: Path to the FastQ like file
+        :param new_filename: Filename of the compressed file
+
+        Compresses the specified file
+        """
         fastq = _FastQ(self.config_path)
         if new_filename is None:
             new_filename = file + self.fileextension  # Default name
         fastq.compress_file(file, new_filename)
 
     def decompress(self, file, new_filename=None):
+        """
+        :param file: Path to the FastQ like file
+        :param new_filename: Filename of the decompressed file
+
+        Decompresses the specified file
+        """
         fastq = _FastQ(self.config_path)
         if new_filename is None:
             new_filename = os.path.splitext(file)[0]

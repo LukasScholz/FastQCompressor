@@ -2,7 +2,7 @@ from pathlib import Path
 import unittest
 from FastQCompressor.Config import Config
 
-FILE_PATH = "src/config/testdata.xml"
+FILE_PATH = "test/testconfig/testdata.xml"
 file_config = Config(FILE_PATH)
 
 
@@ -17,13 +17,13 @@ class TestSubroutines(unittest.TestCase):
         self.assertTrue(all_found)
 
     def test_file_not_found(self):
-        with self.assertRaises(Config.ConfigException):
+        with self.assertRaises(Config._ConfigException):
             Config("this/path/does/not/exist")
 
     def test_corrupted(self):
         folder = file_config.print(["datafolder", "foldername"])
         files = file_config.get_all_children(["datafolder", "files"])
-        with self.assertRaises(Config.ConfigException):
+        with self.assertRaises(Config._ConfigException):
             incorrect_file = folder + "/" + files[0].find("filename").text
             Config(incorrect_file)
 
